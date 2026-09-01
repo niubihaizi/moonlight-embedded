@@ -24,8 +24,8 @@ jobs:
             libevdev-dev libudev-dev \
             libopus-dev libssl-dev \
             libavcodec-dev libavutil-dev \
-            libvdpau-dev libva-dev libvdpau-dev \
-            libx11-dev libegl-dev libgles2-dev \
+            libvdpau-dev libva-dev \
+            libx11-dev libegl-dev libgles-dev \
             libsdl2-dev libcurl4-openssl-dev \
             pkg-config
 
