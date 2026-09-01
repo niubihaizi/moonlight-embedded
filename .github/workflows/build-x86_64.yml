@@ -1,0 +1,52 @@
+name: Build x86_64 Linux
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake gcc g++ \
+            libevdev-dev libudev-dev \
+            libopus-dev libssl-dev \
+            libavcodec-dev libavutil-dev \
+            libvdpau-dev libva-dev libvdpau-dev \
+            libx11-dev libegl-dev libgles2-dev \
+            libsdl2-dev libcurl4-openssl-dev \
+            pkg-config
+
+      - name: Configure
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. \
+            -DENABLE_CEC=OFF \
+            -DENABLE_PULSE=OFF \
+            -DENABLE_SDL=ON \
+            -DENABLE_X11=ON \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: |
+          cd build
+          make -j$(nproc)
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: moonlight-embedded-x86_64
+          path: build/moonlight
